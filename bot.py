@@ -2,8 +2,8 @@ import os
 import json
 import discord
 from discord.ext import commands
-from discord import app_commands
 from flask import Flask
+import threading
 
 # ---------- Flask part ----------
 app = Flask(__name__)
@@ -70,9 +70,8 @@ async def on_message(message):
 if __name__ == "__main__":
     TOKEN = os.getenv("DISCORD_TOKEN")
 
-    import threading
-    def run_flask():
-        app.run(host="0.0.0.0", port=8080)
+    # Lancer Flask dans un thread séparé
+    threading.Thread(target=lambda: app.run(host="0.0.0.0", port=8080)).start()
 
-    threading.Thread(target=run_flask).start()
+    # Lancer le bot Discord
     bot.run(TOKEN)
